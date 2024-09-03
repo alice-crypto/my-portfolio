@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.home-container {
+  background-color: #000;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.projects-container {
+  padding: 50px 0;
+}
+
+.card {
+  border: none;
+  background-color: #222;
+  color: #fff;
+}
+
+.card-title {
+  color: #ffcc00;
+}

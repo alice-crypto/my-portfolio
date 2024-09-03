@@ -1,6 +1,14 @@
 .App {
   text-align: center;
 }
+.nav-link {
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #f8f9fa;
+  background-color: #343a40;
+}
 
 .App-logo {
   height: 40vmin;
