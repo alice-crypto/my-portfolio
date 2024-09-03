@@ -19,7 +19,7 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <Nav.Link as={Link} to="/" className="nav-link">
+              <Nav.Link as={Link} to="/my-portfolio" className="nav-link">
                 Accueil
               </Nav.Link>
               <Nav.Link as={Link} to="/projects" className="nav-link">
@@ -35,7 +35,7 @@ function App() {
           </Navbar.Collapse>
         </Navbar>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/my-portfolio" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
