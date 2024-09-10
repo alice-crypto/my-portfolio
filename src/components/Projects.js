@@ -13,6 +13,7 @@ const cardVariants = {
 const Projects = () => {
   return (
     <Container>
+      <br/>
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -21,6 +22,7 @@ const Projects = () => {
       >
         Mes Projets
       </motion.h2>
+      <br/>
       <Row className="justify-content-center">
         <Col md={4} className="mb-4">
           <motion.div

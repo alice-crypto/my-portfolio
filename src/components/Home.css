@@ -1,35 +1,87 @@
-.home-container {
-  position: relative;
-  overflow: hidden;
-  height: 100vh;
-  color: #fff;
-  background-color: #010101;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.background-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1; /* Assure que le canvas est derrière le contenu */
-}
-
-.display-4, .lead {
-  position: relative;
-  z-index: 1; /* Assure que le texte est au-dessus du canvas */
-}
-@font-face {
-    font-family: 'Digital7';
-    src: url('./digital-7.ttf') format('truetype');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+/* Assurer que le conteneur prend toute la taille de l'écran */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
   
-  .canvas-time {
-    font-family: 'Digital7', sans-serif;
-    font-size: 48px;
-    fill: white;
-    text-align: center;
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Empêcher tout défilement */
   }
+  
+  .home-container {
+    position: relative;
+    width: 100vw;  /* Utiliser toute la largeur de la fenêtre */
+    height: 100vh; /* Utiliser toute la hauteur de la fenêtre */
+    overflow: hidden;
+  }
+  
+  .stripes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;   /* Prendre toute la largeur */
+    height: 100%;  /* Prendre toute la hauteur */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stripe {
+    width: 100%;
+  }
+  
+  /* Adapter les boutons de navigation */
+  .prev-slide-button, .next-slide-button {
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .prev-slide-button:hover, .next-slide-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+/* Icônes de navigation */
+.nav-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    animation: float 2s ease-in-out infinite;
+  }
+  
+  .nav-icon:hover {
+    color: white;
+  }
+  
+  /* Icône à gauche */
+  .nav-icon.left {
+    left: 20px; /* Positionner à gauche avec un espace */
+  }
+  
+  /* Icône à droite */
+  .nav-icon.right {
+    right: 20px; /* Positionner à droite avec un espace */
+  }
+  .text-container h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 5.5rem; /* Augmentez la taille de la police ici */
+    font-weight: 800; 
+  }
+  
+  /* Animation flottante */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(-50%);
+    }
+    50% {
+      transform: translateY(-55%); /* Légère montée et descente */
+    }
+  }
+    

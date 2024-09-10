@@ -1,0 +1,9 @@
+.aboutt-container {
+    padding: 2rem 2rem;
+    background: rgba(255, 255, 255, 0.04); /* Fond semi-transparent pour l'effet de verre */
+    backdrop-filter: blur(15px); /* Applique un flou au fond derrière le conteneur */
+    -webkit-backdrop-filter: blur(10px); /* Pour le support des anciens navigateurs WebKit */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+  }

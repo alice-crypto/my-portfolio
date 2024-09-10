@@ -1,131 +1,148 @@
-import { motion } from 'framer-motion';
-import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
 import './Home.css';
 
+const slides = [
+  "Bienvenue dans mon Portfolio",
+  "Explorez mes projets et découvrez mes compétences",
+  "Contactez-moi pour en savoir plus",
+];
+
 const Home = () => {
-  const canvasRef = useRef(null);
-  const [shapes, setShapes] = useState([]);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [isInverted, setIsInverted] = useState(false);
+  const [direction, setDirection] = useState(1); // 1 pour droite, -1 pour gauche
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      console.error('Le canevas est null');
-      return;
-    }
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('Impossible d\'obtenir le contexte du canevas');
-      return;
-    }
+  // Fonction pour gérer le changement de slide et inverser les couleurs
+  const handleNextSlide = () => {
+    setSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    setIsInverted((prev) => !prev); // Inverser l'état des couleurs à chaque slide
+    setDirection(1); // Aller vers la droite
+  };
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const fontSize = height / 6;
-    //  Initialiser les formes avec des positions et vitesses aléatoires
-    const initializeShapes = () => {
-      const shapesArray = [];
-      for (let i = 0; i < 100; i++) {
-        shapesArray.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          size: Math.random() * 30,
-          dx: (Math.random() - 0.5) * 2, // Vitesse horizontale
-          dy: (Math.random() - 0.5) * 2, // Vitesse verticale
-          type: Math.floor(Math.random() * 3) // Type de forme
-        });
+  const handlePrevSlide = () => {
+    setSlideIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
+    setIsInverted((prev) => !prev); // Inverser l'état des couleurs à chaque slide
+    setDirection(-1); // Aller vers la gauche
+  };
+
+  // Fonction pour générer les bandes horizontales avec la bande du milieu plus large
+  const renderStripes = () => {
+    const stripes = [];
+    const colors = isInverted ? ['white', '#8B4513'] : ['#8B4513', 'white'];
+  
+    const stripeHeights = [15, 15, 40, 15, 15]; // La bande du milieu est plus large
+  
+    for (let i = 0; i < 5; i++) {
+      const stripeStyle = {
+        backgroundColor: i % 2 === 0 ? colors[0] : colors[1], // Alterner entre les couleurs
+        height: `${stripeHeights[i]}%`,
+        width: '100%',
+      };
+  
+      // Ajouter des styles de texture uniquement pour les bandes marron
+      if (colors[i % 2] === '#8B4513') {
+        stripeStyle.backgroundImage = `
+          linear-gradient(
+            135deg, rgba(0, 0, 0, 0.3) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3) 75%, transparent 75%, transparent
+          ),
+          linear-gradient(
+            -45deg, rgba(0, 0, 0, 0.3) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3) 75%, transparent 75%, transparent
+          ),
+          radial-gradient(circle, rgba(0, 0, 0, 0.05) 20%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.3) 100%)
+        `;
+        stripeStyle.backgroundSize = '40px 40px, 40px 40px, 100px 100px';
+        stripeStyle.backgroundPosition = '0 0, 20px 20px, 0 0';
+        stripeStyle.boxShadow = 'inset 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.3)';
       }
-      setShapes(shapesArray);
-    };
-
-    initializeShapes();
-
-    const drawShapes = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      shapes.forEach(shape => {
-        ctx.beginPath();
-        const color = `rgba(111, 78, 56, 0.6)`; // Couleur café
-
-        ctx.fillStyle = color;
-
-        switch (shape.type) {
-          case 0: // Cercle
-            ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2, false);
-            break;
-          case 1: // Carré
-            ctx.rect(shape.x, shape.y, shape.size, shape.size);
-            break;
-          case 2: // Triangle
-            ctx.moveTo(shape.x, shape.y);
-            ctx.lineTo(shape.x + shape.size, shape.y);
-            ctx.lineTo(shape.x + shape.size / 2, shape.y - shape.size);
-            ctx.closePath();
-            break;
-          default:
-            break;
-        }
-
-        ctx.fill();
-
-        // Mettre à jour la position de la forme
-        shape.x += shape.dx;
-        shape.y += shape.dy;
-
-        // Rebondir les formes lorsqu'elles atteignent les bords
-        if (shape.x < 0 || shape.x > width) shape.dx *= -1;
-        if (shape.y < 0 || shape.y > height) shape.dy *= -1;
-      });
-
-      setShapes([...shapes]); // Mettre à jour l'état des formes
-    };
-
-    const drawTime = () => {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      const timeString = `${hours}:${minutes}:${seconds}`;
-
-      ctx.font = '2000% Digital7';
-      ctx.fillStyle = 'white';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'top';
-      ctx.fillText(timeString, 10, 10); // Dessine l'heure au centre du canevas
-    };
-
-    const draw = () => {
-      drawShapes();
-      drawTime();
-      requestAnimationFrame(draw);
-    };
-
-    draw(); // Appeler la fonction une fois au chargement // Mettre à jour les formes et l'heure toutes les secondes
-
-    return () => {
-      setShapes([]); // Nettoyer les formes lorsque le composant est démonté
-    };
-  }, []);
+  
+      stripes.push(
+        <div
+          key={i}
+          className="stripe textured-brown"
+          style={stripeStyle} // Appliquer le style à chaque bande
+        />
+      );
+    }
+    return stripes;
+  };
+  
 
   return (
-    <div className="home-container text-center">
-      <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} style={{ position: 'absolute', top: 0, left: 0 }}></canvas>
-      <motion.h1
+    <div className="home-container">
+      {/* Bandes horizontales avec animation de glissement */}
+      <AnimatePresence>
+        <motion.div
+          key={isInverted} // Animation lors de l'inversion des couleurs
+          initial={{ x: direction === 1 ? '100%' : '-100%' }} // Commence hors écran à droite ou à gauche
+          animate={{ x: '0%' }} // Glisse vers le centre
+          exit={{ x: direction === 1 ? '-100%' : '100%' }} // Sort de l'autre côté
+          transition={{ duration: 1.5 }}
+          className="stripes-container"
+        >
+          {renderStripes()}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Texte du slide */}
+      <motion.div
+        className="text-container"
+        key={slideIndex} // Animation lors du changement de texte
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ duration: 1.5 }}
+        style={{
+          position: 'absolute',
+          top: '40%',
+          left: '40%',
+          transform: 'translate(-50%, -50%)',
+          color: isInverted ? 'black' : 'white',
+        }}
+      >
+        <h1 className="display-4">{slides[slideIndex]}</h1>
+      </motion.div>
+
+      {/* Boutons pour passer au prochain ou précédent slide */}
+      <motion.button
+        onClick={handlePrevSlide}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="display-4"
+        className="prev-slide-button"
+        style={{
+          position: 'absolute',
+          bottom: '10%',
+          left: '30%',
+          padding: '10px 20px',
+          fontSize: '18px',
+          backgroundColor: isInverted ? 'black' : 'white',
+          color: isInverted ? 'white' : 'black',
+          border: '2px solid',
+        }}
       >
-        Bienvenue dans mon Portfolio
-      </motion.h1>
-      <motion.p
-        initial={{ x: '-100vw' }}
-        animate={{ x: 0 }}
-        transition={{ type: 'spring', stiffness: 50 }}
-        className="lead"
+        Diapositive précédente
+      </motion.button>
+
+      <motion.button
+        onClick={handleNextSlide}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+        className="next-slide-button"
+        style={{
+          position: 'absolute',
+          bottom: '10%',
+          right: '30%',
+          padding: '10px 20px',
+          fontSize: '18px',
+          backgroundColor: isInverted ? 'black' : 'white',
+          color: isInverted ? 'white' : 'black',
+          border: '2px solid',
+        }}
       >
-        Explorez mes projets et découvrez mes compétences.
-      </motion.p>
+        Prochaine diapositive
+      </motion.button>
     </div>
   );
 };
